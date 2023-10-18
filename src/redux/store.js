@@ -1,18 +1,35 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { createAction, createReducer } from '@reduxjs/toolkit';
-// createSlice
-//Without slice
-export const increment = createAction('counterValue/increment');
-export const decrement = createAction('counterValue/decrement');
+import { contactsSlice } from './contactsSlice';
+import storage from 'redux-persist/lib/storage';
+import {
+  persistStore,
+  persistReducer,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from 'redux-persist'
 
 
-const reducer = createReducer(0, {
-    [increment]: (state, action) => state + action.payload,
-    [decrement]: (state, action) => state - action.payload
-})
+const persistConfig = {
+  key: 'root',
+  storage,
+  blacklist: ['filter']
+}
+const persistedListReducer = persistReducer(persistConfig, contactsSlice.reducer);
 
 export const store = configureStore({
-    reducer: {counterValue: reducer},
+  reducer: {
+    contacts: persistedListReducer,
+  },
+   middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }),
 });
 
-//With slice
+export const persistor = persistStore(store);

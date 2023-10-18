@@ -1,50 +1,21 @@
-import { useSelector, useDispatch } from "react-redux";
-import { increment, decrement } from "redux/store";
+import css from './App.module.css';
+import { useSelector } from 'react-redux';
+import { ContactForm } from './ContactForm/ContactForm';
+import { ContactList } from './ContactList/ContactList';
+import { getContactsList } from 'redux/contactsSlice';
+import { Filter } from './Filter/Filter';
 
 export const App = () => {
 
-  const dispatch = useDispatch()
-  const defaultValue = useSelector(state => state.counterValue);
+  const list = useSelector(getContactsList);
 
   return (
-    <div
-      style={{
-        height: '100vh',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        fontSize: 40,
-        color: '#010101',
-        flexDirection: 'column',
-        gap:10,
-      }}
-    >
-      React homework template
-      <h1>Learning REDUX TOOLKIT</h1>
-      <button type="button"
-              onClick={()=>dispatch(increment(1))}
-              style={{
-                display: 'block',
-                justifyContent: 'center',
-                alignItems: 'center',
-                fontSize: 40,
-                color: '#010101',
-                flexDirection: 'column',
-        }}>BUTTON+</button>
-      <button type="button"
-              onClick={()=>dispatch(decrement(1))}
-              style={{
-                display: 'block',
-                justifyContent: 'center',
-                alignItems: 'center',
-                fontSize: 40,
-                color: '#010101',
-                flexDirection: 'column',
-      }}>BUTTON-</button>
-      <p>Number:</p>
-      <span>
-        {defaultValue}
-      </span>
-    </div>
+<div className={css.container}>
+        <h1 className={css.bookTitle}>Phonebook</h1>
+        <ContactForm/>
+        <h2 className={css.contactsList}>Contacts</h2>
+        <Filter />
+      {list.length !== 0 && <ContactList />}
+      </div>
   );
 };
